@@ -1,0 +1,10 @@
+{
+  "name": "محلل الروشتات ومساعد الأدوية",
+  "description": "تطبيق ذكي للبحث عن الأدوية وتحليل علب الدواء والروشتات الطبية وعرض المكونات، والأسعار، واستغلال الجرعات وتكلفة الروشتة الإجمالية.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
