@@ -3,7 +3,6 @@ import { Search, Loader2, ShieldCheck } from "lucide-react";
 
 export default function MainContent() {
   const [drugName, setDrugName] = useState("");
-  // نغير النوع ليقبل أي كائن (أي عدد من الحقول)
   const [result, setResult] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -13,14 +12,21 @@ export default function MainContent() {
     setResult(null);
 
     try {
-      const response = await fetch("http://localhost:3001/api/ask", {
+      // استخدام المسار النسبي /api/ask ليعمل على Vercel وأي بيئة أخرى
+      const response = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ drugName }),
       });
+      
       const data = await response.json();
-      setResult(data.answer || { error: data.error });
-    } catch {
+      
+      if (!response.ok) {
+        throw new Error(data.error || "فشل الاتصال بالسيرفر");
+      }
+      
+      setResult(data.answer || { error: "لم يتم العثور على معلومات" });
+    } catch (err: any) {
       setResult({ error: "تعذر الاتصال بالسيرفر" });
     } finally {
       setIsLoading(false);
@@ -31,7 +37,7 @@ export default function MainContent() {
     <main className="max-w-5xl mx-auto px-4 py-8 text-right">
       <div className="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-3xl text-white text-center py-12 px-6 mb-8 shadow-xl">
         <ShieldCheck size={60} className="mx-auto mb-4" />
-        <h1 className="text-5xl font-bold mb-3">بحث صيدلية اون لاين الذكى  </h1>
+        <h1 className="text-5xl font-bold mb-3">بحث صيدلية اون لاين الذكى</h1>
       </div>
 
       <div className="bg-white rounded-3xl shadow-lg p-6 mb-8">
@@ -55,11 +61,9 @@ export default function MainContent() {
             <p className="text-red-500 text-center">{result.error}</p>
           ) : (
             <div className="space-y-4">
-              {/* هنا السر: نقوم بتحويل الكائن إلى قائمة وعرض كل شيء ديناميكياً */}
               {Object.entries(result).map(([key, value]) => (
                 <div key={key} className={`p-4 rounded-xl border ${key === 'price' ? 'bg-blue-50 border-blue-100' : 'bg-slate-50 border-slate-100'}`}>
                   <h3 className="font-bold text-blue-800 capitalize mb-1">
-                    {/* تحسين عرض الأسماء */}
                     {key === "uses" ? "الاستخدامات" : 
                      key === "description" ? "الوصف" :
                      key === "activeIngredient" ? "المادة الفعالة" :
