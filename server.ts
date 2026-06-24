@@ -59,3 +59,7 @@ app.post('/api/ask', async (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// ... (كل الكود السابق)
+
+// تأكد أن هذا السطر هو الأخير في ملف server.ts
+export { app };
